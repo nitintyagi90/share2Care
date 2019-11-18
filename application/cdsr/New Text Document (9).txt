@@ -1,0 +1,340 @@
+<?php 
+include 'header.php';
+include 'sidebar.php';
+?>
+<!-- ============================================================== --><!-- Start right Content here --><!-- ============================================================== -->
+<div class="content-page">
+<!-- Start content -->
+<div class="content">
+<div class="container">
+<div class="row">
+<div class="col-xs-12">
+<br />
+<div class="page-title-box"><h4 class="page-title clr">All Experts</h4>
+<ol class="breadcrumb p-0 m-0"><li><a href="<?php echo base_url('index.php/Admin/Dashboard'); ?>">Admin</a></li>
+<li class="active  clr">Experts</li></ol>
+<div class="clearfix"></div>
+</div>
+</div>
+</div>
+<!-- end row -->
+  <center>
+<?php
+if($_REQUEST['msg']!="")
+{
+$upd=$_REQUEST['msg'];
+echo "<font color=Red><b>$upd</b></font>";	
+echo"<META HTTP-EQUIV='Refresh' CONTENT='2;/index.php/Admin/Proffesional'>";
+}
+else
+{
+echo""	;
+}
+?>
+</center>
+<div class="row">
+                            <div class="col-sm-12">
+                                <div class="card-box table-responsive">
+                                    <div class="row pd-bt">
+                                        <div class="col-md-6">
+                                            <!-- <h4 class="header-title clr"><b>Professional Listing</b></h4> -->
+
+                                        </div>
+                                        <div class="col-md-6">
+                                            <a href="<?php echo base_url('index.php/Admin/create'); ?>" class="btn btn-color1 pull-right" ><i class=" mdi mdi-playlist-plus"></i>&nbsp;Create Expert</a>
+                                        </div>
+                                    </div>
+                                    <table id="datatable" class="table table-striped table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th>SNO.</th>
+                                            <th>Professional</th>
+                                            <th>Phone No.</th>
+                                            <th>Designation</th>
+                                            <th>Category</th>
+                                            <th>Status</th>
+											<th>Date</th>
+                                            <!-- <th>Profile</th> -->
+                                            <th>Action</th>
+                                        </tr>
+                                        </thead>
+
+
+                                        <tbody>
+                                <?php $i=1; foreach ($message as $value) {
+                                 ?>
+
+                                        <tr>
+                                            <th><?php echo $i; ?></th>
+                                            <td><?php echo $value['p_name']; ?> <input type="hidden" class="form-control" id="ename" value="<?php echo $value['p_name']; ?>"></td>
+                                            <td><?php echo $value['p_mobile']; ?><input type="hidden" class="form-control" id="email" value="<?php echo $value['p_email']; ?>"></td>
+                                            <td><?php echo $value['p_destination']; ?><input type="hidden" class="form-control" id="mobile" value="<?php echo $value['p_mobile']; ?>"></td>
+                                            <td><?php  $id=$value['p_cat'];;
+                                            $where='id';
+                                            $table='category';
+                                            $name=$this->Adminmodel->select_comm_where($where,$id,$table);
+
+                                             echo $name[0]['name']; ?> </td>
+                                            <td class="text-center">
+                                               <select class="form-control"  id="aprove_<?php echo $value['id']; ?>" onchange="status('<?php echo $value['id']; ?>');">
+                                                      <option value="0"  <?php if($value['p_active']=='0'){echo "selected"; } ?>>Disapproved</option>
+                                                      <option value="1" <?php if($value['p_active']=='1'){echo "selected"; } ?>>Approved</option>
+                                               </select> 
+                                            </td>
+                                            <!--  <td class="text-center">
+                                                    <a href="#<?php echo $value['id']; ?>_profile" data-toggle="modal" class="btn btn-color1 w-md waves-effect waves-light w-xs m-b-5">View Profile</a>
+                                                </td> -->
+												<td><?php echo $value['p_date']; ?></td>
+                                            <td class="text-center">
+                                                <span><a href="#<?php echo $value['id']; ?>_profile" data-toggle="modal"><i class="fa fa-eye"></i></a></span> |
+                                                <span><a href="#<?php echo $value['id']; ?>_edit" data-toggle="modal"><i class="mdi mdi-pencil clr"></i></a></span> |
+                                                <span><a href="#<?php echo $value['id']; ?>_del" data-toggle="modal"><i class="mdi mdi-delete-forever clr"></i></a></span>
+                                            </td>
+                                        </tr>
+                                    <?php $i++; } ?>
+                                      
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- end row -->
+
+                    </div> <!-- container -->
+
+                </div> <!-- content -->
+
+                <footer class="footer text-right">
+                   2018 © Share2care.
+                </footer>
+
+            </div>
+
+
+            <!-- ============================================================== -->
+            <!-- End Right content here -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- END wrapper -->
+
+    <!------- add ---------->
+    
+    <!------- add ---------->
+<?php  foreach ($message as $value) { ?>
+<div id="<?php echo $value['id']; ?>_edit" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title">Edit Profile</h4></div>
+<div class="modal-body">
+<div class="row">
+<form class="form-horizontal" method="post" action="<?php echo base_url('index.php/Admin/editprofession'); ?>" enctype="multipart/form-data" >
+<div class="col-md-6">
+<div class="form-group">
+<label for="field-1" class="control-label">Name</label><input type="text" class="form-control" name="name"  placeholder="Enter  Professional Name" value="<?php echo $value['p_name']; ?>">
+<input type="hidden" name="id" value="<?php echo $value['id']; ?>">
+</div>
+</div>
+                                                        
+<div class="col-md-6">
+<div class="form-group"><label for="field-2" class="control-label">Email</label><input type="text" class="form-control" name="email" placeholder="Enter  Phone No." value="<?php echo $value['p_email']; ?>" readonly></div>
+</div>
+                                                   
+<div class="col-md-6">
+<div class="form-group"><label for="field-3" class="control-label">Mobile No.</label><input type="text" class="form-control" name="mobile" placeholder="Enter  Phone No." value="<?php echo $value['p_mobile']; ?>" readonly></div>
+</div>
+
+<div class="col-md-6">
+<div class="form-group"><label for="field-4" class="control-label">Designation</label><input type="text" class="form-control" name="designation" placeholder="Enter  Designation" value="<?php echo $value['p_destination']; ?>"></div>
+</div>
+
+<div class="col-md-6">
+<div class="form-group">
+<label for="field-5" class="control-label">Experience</label>
+<select name="experience" class="form-control option-list" required >
+<option value="<?php echo $value['p_experience']; ?>" selected><?php echo $value['p_experience']; ?></option>
+<option value="">---- To change select below----</option>
+<option value="10 - 20 Yr">10 - 20 Yr</option>
+<option value="20 - 30 yr">20 - 30 yr</option>
+<option value="30 Yr ">30 Yr ></option>
+</select>							
+</div>
+</div>                                                  
+
+<div class="col-md-6">
+<div class="form-group">
+<label for="field-4" class="control-label">Category</label>
+<select class="form-control"  name="cat">
+<?php $table='category'; $named=$this->Adminmodel->select_comm($table); foreach ($named as  $valued) { ?>
+<option value="<?php echo $valued['id']; ?>" <?php if($valued['id']==$value['p_cat']){echo "selected"; } ?>><?php echo $valued['name']; ?></option>
+<?php } ?>          
+</select>
+</div>
+</div>
+													   
+<div class="col-md-3">
+<label for="field-7" class="control-label">Profile Image</label>
+<?php if($message[0]['p_image']){ ?>
+                                                        <img src="<?php echo $message[0]['p_image']?>" class="img-circle img-thumbnail" alt="profile-image">
+														<input type="hidden" name="file" value="<?php echo $message[0]['p_image']?>">
+														 <br />
+                                                    <?php }else{ ?>
+                                                         <img src="<?php echo base_url();?>image/users/user.png" class="img-circle img-thumbnail" alt="profile-image">
+													 <br />	
+<input type="file" class="filestyle" data-input="false" name="file">
+                                                    <?php }?>
+
+
+</div>
+
+<div class="col-md-9">
+<div class="form-group no-margin">
+<label for="field-7" class="control-label">About Me</label>
+<textarea class="form-control autogrow" name="description" id="field-7"  style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 104px;"><?php echo $value['p_description']; ?></textarea>
+</div>
+<button type="submit" class="btn btn-success btn-sm w-sm waves-effect m-t-10 waves-light">Save</button>
+<button type="button" data-dismiss="modal" class="btn btn-danger btn-sm w-sm waves-effect m-t-10 waves-light">Cancel</button>
+</div>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<?php } ?>	
+
+<?php  foreach ($message as $value) { ?>
+ <div id="<?php echo $value['id'];  ?>_del" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+        <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <div class="row">
+                           <form action="<?php echo base_url('index.php/Admin/delprofession/'.$value['id']);?>" method="post">
+                            <div class="col-md-12 col-xs-12 col-sm-12 mg-tp-6">
+                               
+                                   
+                                    <input type="hidden" id="aa" value="1">
+                                <h3 class="text-center">Are You Sure?</h3>
+                                <div class="row" style="margin: 25px 0px 8px 52px;">
+                                    <div class="col-md-offset-3 col-md-3">
+                                       
+                                        <input type="submit" class="btn btn-info"  value="Yes" >
+                                    </div>
+                                    <div class="col-md-3">
+                                        <input type="button" class="btn btn-danger" value="no" data-dismiss="modal" >
+                                    </div>
+                                </div>  
+                                </div> 
+                               </form>
+                           
+                                                            
+                            </div>
+                        </div>
+                </div>
+            </div>
+<input type="hidden" id="url" value="<?php echo base_url(); ?>index.php/">
+  </div>
+<?php } ?>
+    <?php  foreach ($message as $value) { ?>
+<div id="<?php echo $value['id']; ?>_profile" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display: none;">
+<div class="modal-dialog">
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+<h4 class="modal-title">Expert's Profile</h4>
+</div>
+<div class="modal-body">
+<div class="row">
+<div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="field-1" class="control-label">Name</label>
+                                                                <input type="text" class="form-control" id="field-1" value="<?php echo $value['p_name']; ?>" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="field-2" class="control-label">Email</label>
+                                                                <input type="email" class="form-control" id="field-2" value="<?php echo $value['p_email']; ?>" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="field-3" class="control-label">Mobile NO</label>
+                                                                <input type="text" class="form-control" id="field-3" value="<?php echo $value['p_mobile']; ?>" readonly>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="field-4" class="control-label">Designation</label>
+                                                                <input type="text" class="form-control" id="field-4" value="<?php echo $value['p_destination']; ?>" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="field-5" class="control-label">Experience</label>
+                                                                <input type="text" class="form-control" id="field-5" value="<?php echo $value['p_experience']; ?>" readonly>
+                                                            </div>
+                                                        </div>
+                                                          <?php 
+                                                          $id=$value['p_cat'];
+                                                            $where='id';
+                 $table='category';
+                 $datas =$this->Adminmodel->select_comm_where($where,$id,$table); ?>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="field-6" class="control-label">Category</label>
+                                                                <input type="text" class="form-control" id="field-6" value="<?php echo $datas[0]['name']; ?>" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="row">
+                                                    	 <div class="col-md-3">
+                                                    	 	 <label for="field-7" class="control-label">Profile Image</label>
+															 <?php if($message[0]['p_image']){ ?>
+                                                        <img src="<?php echo $message[0]['p_image']?>" class="img-circle img-thumbnail" alt="profile-image">
+                                                    <?php }else{ ?>
+                                                         <img src="<?php echo base_url();?>image/users/user.png" class="img-circle img-thumbnail" alt="profile-image">
+                                                    <?php }?>
+                                                    	 	<!--<img src="<?php echo $value['p_image']; ?>" class="img-responsive">-->
+                                                    	 </div>
+                                                        <div class="col-md-9">
+                                                            <div class="form-group no-margin">
+                                                                <label for="field-7" class="control-label">About Me</label>
+                                                                <textarea class="form-control autogrow" id="field-7"  style="overflow: hidden; word-wrap: break-word; resize: horizontal; height: 104px;" readonly><?php echo $value['p_description']; ?></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                               
+                                            </div>
+                                        </div>
+                                    </div>
+<?php } ?>
+<?php include 'footer.php'; ?>
+<script type="text/javascript">
+function status(id){
+var urls = $("#url").val();
+var status = $("#aprove_"+id).val();
+var ename = $("#ename").val();
+var email = $("#email").val();
+var mobile = $("#mobile").val();
+$.ajax({
+type: "POST",
+url: urls+"Admin/status",
+data: {status:status,id:id,ename:ename,email:email,mobile:mobile},
+cache: false,
+success: function(result){
+location.reload();
+}
+});
+}
+</script>

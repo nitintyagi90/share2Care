@@ -1,0 +1,51 @@
+1.
+
+
+.carousel-inner>.item>a>img, .carousel-inner>.item>img, .img-responsive, .thumbnail a>img, .thumbnail>img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid #ccc;
+    width: 200px;
+}
+
+remove submit enquiry anchor tag
+
+
+
+2. 
+
+http://localhost/.test/s2c/index.php/Admin/create
+
+Experience 
+1-10
+
+10-20
+
+20-30
+
+30 > 
+
+radio 
+
+
+
+
+3.
+http://localhost/.test/s2c/index.php/education
+
+show description in detail
+
+
+4. About Me 500 words`
+
+
+
+4. Manage Experts
+fully
+
+
+5. Latest enquiry
+
+view delete icons have to be chANGED
+

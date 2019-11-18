@@ -1,0 +1,53 @@
+public function chat(){
+//is_protected();
+date_default_timezone_set('Asia/Kolkata'); 
+$dates=date("d-m-Y h:i:A");
+$data = array(
+'user_id' => $_POST['userid'],			       
+'pro_id' =>$_POST['proid'],
+'comment' =>$_POST['text'], 
+'query_id' =>$_POST['queryid'],
+'is_comment' =>'1',
+'date' =>$dates,
+);
+$table='comment';
+$id=$this->Adminmodel->insert_comm($table,$data);
+$uname=$_POST['uname'];
+$uemail=$_POST['uemail'];
+$umob=$_POST['umob'];
+$umsg=$_POST['umsg'];
+$uenq=$_POST['uenq'];
+
+$to = $_POST['uemail'];
+$subject = "Reply Recieved for Enquiry No." .$uenq." on ".$dates;
+$txt = "Hello " .$_POST['uname']."\n\nExpert Replied to your Query No. " .$_POST['uenq'].". Please login your account on www.share2care.co";
+$headers = "From: info.share2care@gmail.com";
+mail($to,$subject,$txt,$headers);
+
+$toa = 'amit@maztro.com';
+$subject = "Admin Reply for Enquiry No." .$uenq." on ".$dates;
+$txt = "Hello Admin\n\nYou Replied to your Query No. " .$_POST['uenq'];
+$headers = "From: info.share2care@gmail.com";
+mail($toa,$subject,$txt,$headers);
+adminreply($umob,$uname);
+redirect('index.php/Admin/create');
+	}
+public function status(){
+is_protected();
+$data = array(
+'p_active' => $_POST['status'],     
+);
+$table='proffesional';
+$where='id';
+$id=$_POST['id'];
+$id=$this->Adminmodel->update_comm($table,$data,$where,$id);
+$mob=$_POST['mobile'];
+$ename=$_POST['ename'];
+$email=$_POST['email'];
+$to = $_POST['email'];
+$subject = "Your Expert Account Approved by Admin.";
+$txt = "Hello " .$_POST['ename']."\n\n Your expert account approved successfully by Admin. Please login into your expert account on www.share2care.co";
+$headers = "From: info.share2care@gmail.com";	
+mail($to,$subject,$txt,$headers);
+exprtaprve($mob,$ename);
+	}
